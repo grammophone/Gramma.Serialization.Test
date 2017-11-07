@@ -93,31 +93,29 @@ namespace Grammophone.Serialization.Testing
 					}
 
 					Assert.AreEqual(album.Edition.MajorNumber, 1);
-                    Assert.AreEqual(album.Edition.ReleaseDate, new DateTime(2017,11, 06));
-                }
-            }
+					Assert.AreEqual(album.Edition.ReleaseDate, new DateTime(2017, 11, 06));
+				}
+			}
 		}
 
+		[TestMethod]
+		public void TestDateTime()
+		{
+			var now = DateTime.Now;
+			var formatter = new FastBinaryFormatter();
 
 
-        [TestMethod]
-        public void TestDateTime() {
-            var now = DateTime.Now;
-            var formatter = new FastBinaryFormatter();
+			using (var stream = new MemoryStream())
+			{
+				formatter.Serialize(stream, now);
+				stream.Seek(0, SeekOrigin.Begin);
+				var deserializedObject = (DateTime)formatter.Deserialize(stream);
 
+				Assert.AreEqual(deserializedObject, now);
+			}
+		}
 
-            using (var stream = new MemoryStream()) {
-                formatter.Serialize(stream, now);
-                stream.Seek(0, SeekOrigin.Begin);
-                var deserializedObject = (DateTime) formatter.Deserialize(stream);
-
-                Assert.AreEqual(deserializedObject, now);
-            }
-        }
-
-
-
-        [TestMethod]
+		[TestMethod]
 		[ExpectedException(typeof(SerializationException))]
 		public void DiscoverMissingSerializableAttribute()
 		{
