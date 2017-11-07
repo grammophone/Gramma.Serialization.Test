@@ -93,11 +93,31 @@ namespace Grammophone.Serialization.Testing
 					}
 
 					Assert.AreEqual(album.Edition.MajorNumber, 1);
-				}
-			}
+                    Assert.AreEqual(album.Edition.ReleaseDate, new DateTime(2017,11, 06));
+                }
+            }
 		}
 
-		[TestMethod]
+
+
+        [TestMethod]
+        public void TestDateTime() {
+            var now = DateTime.Now;
+            var formatter = new FastBinaryFormatter();
+
+
+            using (var stream = new MemoryStream()) {
+                formatter.Serialize(stream, now);
+                stream.Seek(0, SeekOrigin.Begin);
+                var deserializedObject = (DateTime) formatter.Deserialize(stream);
+
+                Assert.AreEqual(deserializedObject, now);
+            }
+        }
+
+
+
+        [TestMethod]
 		[ExpectedException(typeof(SerializationException))]
 		public void DiscoverMissingSerializableAttribute()
 		{
@@ -124,7 +144,7 @@ namespace Grammophone.Serialization.Testing
 			grammophoneSongs.Add(new Song("clear day", grammophoneArtist, Genre.Get("electronic")));
 			grammophoneSongs.Add(new Song("pure talentless", grammophoneArtist, Genre.Get("electronic")));
 
-			var edition = new Edition { MajorNumber = 1, MinorNumber = 0 };
+			var edition = new Edition { MajorNumber = 1, MinorNumber = 0, ReleaseDate = new DateTime(2017, 11, 06) };
 
 			var grammophoneAlbum = new Album(
 				"coffee for the farmer",

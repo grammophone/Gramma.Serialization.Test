@@ -11,5 +11,7 @@ namespace Grammophone.Serialization.Testing.MusicModel
 		public int MajorNumber;
 
 		public int MinorNumber;
-	}
+
+        public DateTime ReleaseDate { get; set; }
+    }
 }
